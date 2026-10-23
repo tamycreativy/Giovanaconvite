@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Giovanna · Baile de Máscaras</title>
+<meta property="og:title" content="Giovanna · Baile de Máscaras">
+<meta property="og:description" content="Você é meu convidado especial. Toque para abrir o convite.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://creativyconvites.com.br/Giovanaconvite/capa-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+/* Layout: palco 9:16 que cabe em qualquer tela. Vídeo de abertura -> informações. Os botões são áreas transparentes sobre a arte, em % do palco. */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--azul:#0d1b3a;--prata:#dfe6f2;--ouro:#e9d6a3}
+html,body{width:100%;height:100%;overflow:hidden;background:#050a18;font-family:'Cormorant Garamond',Georgia,serif;color:var(--prata)}
+body{position:fixed;inset:0;-webkit-tap-highlight-color:transparent}
+.bg{position:absolute;inset:-6%;background:center/cover no-repeat;filter:blur(28px) brightness(.7);transform:scale(1.1)}
+.stage{position:absolute;top:50%;left:50%;height:100dvh;width:calc(100dvh*9/16);max-width:100vw;max-height:calc(100vw*16/9);transform:translate(-50%,-50%);overflow:hidden;background:#000;box-shadow:0 0 70px #000a}
+.tela{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .8s ease,visibility 0s .8s}
+.tela.on{opacity:1;visibility:visible;transition:opacity .8s ease}
+.arte,.tela video{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;user-select:none;-webkit-user-drag:none}
+
+/* início: toque para abrir */
+#inicio{cursor:pointer;z-index:4}
+#inicio .dica{position:absolute;left:0;right:0;bottom:9%;text-align:center;font:italic 600 clamp(20px,6vw,28px)/1.2 'Cormorant Garamond',serif;color:#fff;text-shadow:0 2px 14px #000,0 0 24px #000;animation:pisca 2s ease-in-out infinite}
+#inicio .dica b{display:block;font:400 clamp(30px,9vw,44px)/1.1 'Great Vibes',cursive;color:var(--ouro);font-weight:400}
+@keyframes pisca{0%,100%{opacity:.55;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
+
+/* botões sobre a arte */
+.hit{position:absolute;border-radius:50%;cursor:pointer;border:0;background:transparent;outline:none;-webkit-appearance:none;appearance:none;text-decoration:none;transition:transform .15s,box-shadow .25s,background .25s}
+.hit::before{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(223,230,242,.0);animation:halo 3s ease-in-out infinite}
+.hit:nth-of-type(2)::before{animation-delay:.3s}.hit:nth-of-type(3)::before{animation-delay:.6s}.hit:nth-of-type(4)::before{animation-delay:.9s}.hit:nth-of-type(5)::before{animation-delay:1.2s}
+@keyframes halo{0%,100%{box-shadow:0 0 0 0 rgba(223,230,242,0)}50%{box-shadow:0 0 18px 4px rgba(223,230,242,.55)}}
+.hit:hover{background:rgba(223,230,242,.14)}
+.hit:active{transform:scale(.93);background:rgba(223,230,242,.26)}
+.hit:focus-visible{box-shadow:0 0 0 3px #fff}
+#b1,#b2,#b3{width:15.7%;aspect-ratio:1;top:64.24%}
+#b1{left:calc(36.2% - 7.85%)}#b2{left:calc(52.5% - 7.85%)}#b3{left:calc(68.2% - 7.85%)}
+#b4,#b5{width:15.7%;aspect-ratio:1;top:74.95%}
+#b4{left:calc(43.7% - 7.85%)}#b5{left:calc(61% - 7.85%)}
+
+/* telas de conteúdo */
+.sub{z-index:5}
+.voltar{position:absolute;right:5%;top:2.6%;width:11%;aspect-ratio:1;border-radius:50%;border:1.5px solid var(--prata);background:rgba(13,27,58,.6);color:var(--prata);font:600 clamp(18px,5.5vw,28px)/1 system-ui;display:grid;place-items:center;cursor:pointer;z-index:6;backdrop-filter:blur(4px)}
+
+/* som */
+#som{position:absolute;left:3.5%;top:2.2%;width:9.5%;aspect-ratio:1;border-radius:50%;border:1.5px solid rgba(223,230,242,.7);background:rgba(13,27,58,.55);color:var(--prata);display:none;place-items:center;cursor:pointer;z-index:9;backdrop-filter:blur(4px)}
+#som.on{display:grid}
+#som svg{width:55%;height:55%}
+#som .x{display:none}#som.mudo .x{display:block}#som.mudo .w{display:none}
+
+/* confirmação de presença */
+#rsvp{z-index:7;background:rgba(5,10,24,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:6% 5%}
+.cartao{position:relative;width:100%;max-height:92%;overflow:auto;padding:7% 7% 6%;border-radius:22px;background:linear-gradient(160deg,rgba(24,42,86,.96),rgba(10,18,44,.97));border:1.5px solid rgba(223,230,242,.55);box-shadow:0 0 0 5px rgba(223,230,242,.08),0 24px 60px #000c,inset 0 0 40px rgba(120,150,230,.12);text-align:center}
+.cartao h2{font:400 clamp(34px,10vw,50px)/1 'Great Vibes',cursive;color:#fff;margin-bottom:2px}
+.cartao .lead{font:italic 500 clamp(15px,4.3vw,18px)/1.35 'Cormorant Garamond',serif;color:var(--prata);opacity:.9;margin-bottom:16px}
+.cartao label{display:block;text-align:left;font:600 clamp(11px,3.2vw,13px)/1 'Cormorant Garamond',serif;letter-spacing:.2em;text-transform:uppercase;color:var(--ouro);margin:14px 0 6px}
+.cartao input[type=text],.cartao textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(223,230,242,.4);background:rgba(255,255,255,.07);color:#fff;font:500 18px 'Cormorant Garamond',serif;outline:none}
+.cartao textarea{resize:none;height:72px}
+.cartao input:focus,.cartao textarea:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(223,230,242,.2)}
+.cartao ::placeholder{color:rgba(223,230,242,.5)}
+.opc{display:flex;gap:10px}
+.opc button{flex:1;padding:12px 8px;border-radius:12px;border:1.5px solid rgba(223,230,242,.45);background:transparent;color:var(--prata);font:600 clamp(15px,4.4vw,18px) 'Cormorant Garamond',serif;cursor:pointer;transition:.2s}
+.opc button.sel{background:linear-gradient(180deg,#f1f5fc,#b9c6de);color:var(--azul);border-color:#fff;box-shadow:0 0 18px rgba(223,230,242,.45)}
+.qtd{display:flex;align-items:center;justify-content:center;gap:18px}
+.qtd button{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(223,230,242,.55);background:transparent;color:#fff;font:600 24px/1 system-ui;cursor:pointer}
+.qtd b{min-width:44px;font:600 30px 'Cormorant Garamond',serif;color:#fff}
+.qtd small{display:block;font:italic 500 13px 'Cormorant Garamond',serif;opacity:.75;margin-top:2px}
+.enviar{margin-top:20px;width:100%;padding:14px;border-radius:999px;border:0;cursor:pointer;background:linear-gradient(180deg,#f6f9ff,#aebbd6);color:var(--azul);font:700 17px 'Cormorant Garamond',serif;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 10px 24px -8px #000}
+.enviar:disabled{opacity:.6;cursor:default}
+.erro{margin-top:10px;font-size:15px;color:#ffb4b4;min-height:1em}
+.ok{display:none;padding:6% 0}
+.ok .big{font:400 clamp(40px,12vw,60px)/1 'Great Vibes',cursive;color:#fff}
+.ok p{font:italic 500 clamp(17px,5vw,21px)/1.4 'Cormorant Garamond',serif;margin-top:10px}
+.cartao.feito form{display:none}.cartao.feito .ok{display:block}.cartao.feito h2,.cartao.feito .lead{display:none}
+#rsvp .voltar{right:4%;top:3%}
+
+#aviso{position:absolute;left:8%;right:8%;bottom:5%;z-index:12;padding:12px 16px;border-radius:16px;background:rgba(240,244,252,.96);color:#13234d;font:600 17px/1.35 'Cormorant Garamond',serif;text-align:center;box-shadow:0 10px 24px #000a;opacity:0;pointer-events:none;transform:translateY(10px);transition:.3s}
+#aviso.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.hit::before,#inicio .dica{animation:none}.tela,.tela.on{transition:none}}
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+
+<div class="stage" id="stage">
+
+  <!-- Vídeo de abertura. A música é um áudio à parte, para continuar tocando nas informações -->
+  <section class="tela on" id="inicio" aria-label="Toque para abrir o convite">
+    <video id="video" src="abertura.mp4" poster="poster.jpg" muted playsinline webkit-playsinline preload="auto"></video>
+    <div class="dica"><b>Giovanna</b>toque para abrir o convite</div>
+  </section>
+
+  <!-- Informações -->
+  <section class="tela" id="info" aria-label="Informações do convite">
+    <img class="arte" src="info.jpg" alt="Convite Giovanna: 21 de novembro, às 20 horas">
+    <button class="hit" id="b1" type="button" aria-label="Confirmar presença"></button>
+    <button class="hit" id="b2" type="button" aria-label="Localização"></button>
+    <button class="hit" id="b3" type="button" aria-label="Para presentear"></button>
+    <button class="hit" id="b4" type="button" aria-label="Dress code"></button>
+    <button class="hit" id="b5" type="button" aria-label="Álbum de fotos e mural de recados"></button>
+  </section>
+
+  <section class="tela sub" id="presentes" aria-label="Para presentear">
+    <img class="arte" src="presentes.jpg" alt="Para presentear: maquiagens, perfumes doces, cosméticos, roupas M (40) e sandália 37">
+    <button class="voltar" type="button" data-fechar aria-label="Voltar ao convite">✕</button>
+  </section>
+
+  <section class="tela sub" id="dress" aria-label="Dress code">
+    <img class="arte" src="dress.jpg" alt="Dress code: traje social. Proibido ir com roupas azul marinho ou prata">
+    <button class="voltar" type="button" data-fechar aria-label="Voltar ao convite">✕</button>
+  </section>
+
+  <!-- Confirmar presença dentro do próprio convite -->
+  <section class="tela sub" id="rsvp" aria-label="Confirmar presença">
+    <button class="voltar" type="button" data-fechar aria-label="Fechar">✕</button>
+    <div class="cartao" id="cartao">
+      <h2>Confirmar presença</h2>
+      <p class="lead">Conte para a Giovanna se você vem ao baile.</p>
+      <form id="form" autocomplete="off" novalidate>
+        <label for="nome">Seu nome</label>
+        <input type="text" id="nome" maxlength="80" placeholder="Nome e sobrenome">
+        <label>Você vai?</label>
+        <div class="opc"><button type="button" id="vou" class="sel">Vou sim</button><button type="button" id="nvou">Não poderei</button></div>
+        <div id="qbox">
+          <label>Quantas pessoas, contando com você?</label>
+          <div class="qtd"><button type="button" id="menos" aria-label="Menos">−</button><div><b id="qn">1</b></div><button type="button" id="mais" aria-label="Mais">+</button></div>
+        </div>
+        <label for="obs">Recado (opcional)</label>
+        <textarea id="obs" maxlength="300" placeholder="Um recado para a aniversariante"></textarea>
+        <button class="enviar" id="enviar" type="submit">Enviar</button>
+        <div class="erro" id="erro" role="alert"></div>
+      </form>
+      <div class="ok" id="ok"><div class="big" id="okt">Presença confirmada</div><p id="okp">Obrigada! Te esperamos no baile.</p></div>
+    </div>
+  </section>
+
+  <button id="som" type="button" aria-label="Ligar ou desligar a música">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg>
+  </button>
+  <div id="aviso" role="status"></div>
+  <audio id="musica" src="musica.m4a" loop preload="auto"></audio>
+</div>
+
+<script>
+/* ====== CONFIGURAÇÕES: troque aqui ====== */
+var CONFIG = {
+  /* Link do Google Maps do local da festa (use "Compartilhar" no Maps e cole o link). Vazio = botão avisa "em breve". */
+  mapa: '',
+  /* Álbum de fotos e mural de recados */
+  album: 'https://creativyconvites.com.br/albumgiovanna/',
+  /* Onde as confirmações ficam guardadas (Supabase). Tabela: confirmacoes_giovanna */
+  sbUrl: 'https://bfncxrmxlkdxqqrjmizq.supabase.co',
+  sbKey: 'sb_publishable_1Tl_N6-UxutKxK9gOrcQVA_J4FrT7MJ',
+  tabela: 'confirmacoes_giovanna'
+};
+/* ======================================== */
+
+var $=function(i){return document.getElementById(i)};
+var DEMO=/[?&]demo\b/.test(location.search);
+var inicio=$('inicio'),info=$('info'),video=$('video'),musica=$('musica'),som=$('som'),aviso=$('aviso');
+$('bg').style.backgroundImage='url(poster.jpg)';
+
+function msg(t){aviso.textContent=t;aviso.classList.add('on');clearTimeout(msg.t);msg.t=setTimeout(function(){aviso.classList.remove('on')},3400)}
+
+/* ---- abrir: toca o vídeo e a música ---- */
+var iniciou=false;
+function mostrarInfo(){
+  if(info.classList.contains('on'))return;
+  info.classList.add('on');inicio.classList.remove('on');
+  setTimeout(function(){try{video.pause()}catch(e){}},900);
+}
+function abrir(){
+  if(iniciou)return;iniciou=true;
+  inicio.querySelector('.dica').style.display='none';
+  som.classList.add('on');
+  try{musica.currentTime=0;musica.volume=1;var p=musica.play();if(p&&p.catch)p.catch(function(){})}catch(e){}
+  var p2=video.play();
+  if(p2&&p2.catch)p2.catch(function(){mostrarInfo()});
+  if(navigator.vibrate)try{navigator.vibrate(20)}catch(e){}
+}
+inicio.addEventListener('click',abrir);
+video.addEventListener('ended',mostrarInfo);
+/* se o vídeo travar muito, não deixa a pessoa presa: pula para as informações no fim do tempo */
+video.addEventListener('playing',function(){try{musica.currentTime=video.currentTime}catch(e){}});
+
+/* ---- som ligado/desligado ---- */
+som.addEventListener('click',function(){
+  if(musica.paused){musica.play();som.classList.remove('mudo')}
+  else if(musica.muted){musica.muted=false;som.classList.remove('mudo')}
+  else{musica.muted=true;som.classList.add('mudo')}
+});
+/* se a pessoa sair do navegador e voltar, retoma a música */
+document.addEventListener('visibilitychange',function(){if(document.hidden){musica.pause()}else if(iniciou&&!som.classList.contains('mudo')){musica.play().catch(function(){})}});
+
+/* ---- telas de conteúdo ---- */
+function abrirTela(id){$(id).classList.add('on')}
+function fecharTelas(){['presentes','dress','rsvp'].forEach(function(i){$(i).classList.remove('on')})}
+document.querySelectorAll('[data-fechar]').forEach(function(b){b.addEventListener('click',fecharTelas)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')fecharTelas()});
+
+$('b1').addEventListener('click',function(){abrirTela('rsvp')});
+$('b3').addEventListener('click',function(){abrirTela('presentes')});
+$('b4').addEventListener('click',function(){abrirTela('dress')});
+$('b2').addEventListener('click',function(){
+  if(CONFIG.mapa)window.open(CONFIG.mapa,'_blank','noopener');
+  else msg('A localização será informada em breve.');
+});
+$('b5').addEventListener('click',function(){window.open(CONFIG.album,'_blank','noopener')});
+
+/* ---- confirmação de presença ---- */
+var vai=true,qtd=1;
+function setVai(v){vai=v;$('vou').classList.toggle('sel',v);$('nvou').classList.toggle('sel',!v);$('qbox').style.display=v?'block':'none'}
+$('vou').addEventListener('click',function(){setVai(true)});
+$('nvou').addEventListener('click',function(){setVai(false)});
+$('menos').addEventListener('click',function(){qtd=Math.max(1,qtd-1);$('qn').textContent=qtd});
+$('mais').addEventListener('click',function(){qtd=Math.min(10,qtd+1);$('qn').textContent=qtd});
+
+$('form').addEventListener('submit',function(e){
+  e.preventDefault();
+  var nome=$('nome').value.trim(),erro=$('erro'),btn=$('enviar');
+  erro.textContent='';
+  if(nome.length<2){erro.textContent='Escreva o seu nome, por favor.';$('nome').focus();return}
+  /* evita enviar duas vezes o mesmo convidado no mesmo aparelho */
+  var chave='conf-giovanna';
+  btn.disabled=true;btn.textContent='Enviando...';
+  var dados={nome:nome,vai:vai,pessoas:vai?qtd:0,obs:$('obs').value.trim()||null};
+  function sucesso(){
+    $('okt').textContent=vai?'Presença confirmada':'Recado enviado';
+    $('okp').textContent=vai?'Obrigada, '+nome.split(' ')[0]+'! Te esperamos no baile.':'Obrigada por avisar, '+nome.split(' ')[0]+'. Sentiremos a sua falta.';
+    $('cartao').classList.add('feito');
+    try{localStorage.setItem(chave,'1')}catch(e){}
+  }
+  if(DEMO){setTimeout(sucesso,500);return}  /* demonstração do portfólio: não grava nada */
+  fetch(CONFIG.sbUrl+'/rest/v1/'+CONFIG.tabela,{method:'POST',headers:{apikey:CONFIG.sbKey,Authorization:'Bearer '+CONFIG.sbKey,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(dados)})
+   .then(function(r){if(!r.ok)throw new Error(r.status);sucesso()})
+   .catch(function(){btn.disabled=false;btn.textContent='Enviar';erro.textContent='Não consegui enviar agora. Confira a internet e tente de novo.'});
+});
+</script>
+</body>
+</html>
