@@ -169,11 +169,28 @@ function msg(t){aviso.textContent=t;aviso.classList.add('on');clearTimeout(msg.t
 
 /* ---- abrir: toca o vídeo e a música ---- */
 var iniciou=false;
+var saindo=false,infoImg=info.querySelector('img');
 function mostrarInfo(){
-  if(info.classList.contains('on'))return;
-  info.classList.add('on');inicio.classList.remove('on');
-  setTimeout(function(){try{video.pause()}catch(e){}},900);
+  if(info.classList.contains('on')||saindo)return;
+  saindo=true;
+  /* para o vídeo na hora, antes dos últimos quadros (o arquivo termina com quadros pretos) */
+  try{video.pause()}catch(e){}
+  var feito=false;
+  function trocar(){
+    if(feito)return;feito=true;
+    info.classList.add('on');inicio.classList.remove('on');
+  }
+  /* só troca quando a imagem das informações já está pronta, para não piscar escuro */
+  try{if(infoImg&&infoImg.decode){infoImg.decode().then(trocar,trocar);setTimeout(trocar,700)}else{trocar()}}catch(e){trocar()}
 }
+/* confere quadro a quadro: corta quando faltar menos de 0,5 s para o fim */
+function vigiaFim(){
+  if(saindo||info.classList.contains('on'))return;
+  if(video.duration&&video.currentTime>=video.duration-.5){mostrarInfo();return}
+  requestAnimationFrame(vigiaFim);
+}
+video.addEventListener('playing',function(){requestAnimationFrame(vigiaFim)});
+video.addEventListener('timeupdate',function(){if(video.duration&&video.currentTime>=video.duration-.5)mostrarInfo()});
 function abrir(){
   if(iniciou)return;iniciou=true;
   inicio.querySelector('.dica').style.display='none';
